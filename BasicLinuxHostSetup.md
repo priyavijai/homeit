@@ -38,6 +38,7 @@ This is useful to force use of specific nameservers. I use this as a precursor t
 
 First force link `/etc/resolv.conf` to the `systemd-resolved` generated one:
 
+`sudo unlink /etc/resolv.conf`
 `sudo ln -sv /run/systemd/resolve/resolv.conf /etc/resolv.conf`
 
 Then update `/etc/systemd/resolved.conf` as follows (you can play with the options):
@@ -53,7 +54,13 @@ DNSStubListener=no
 ReadEtcHosts=yes
 ```
 
-Then restart the 
+Then restart the `systemd-resolved` service:
+
+`sudo systemctl restart systemd-resolved`
+
+Verify DNS lookups continue to work correctly by checking the output of:
+
+`nslookup www.google.com`
 
 # Some Useful Basic Software
 
@@ -70,6 +77,7 @@ If you don't already have a SSH key, you can generate a default one by running:
 The defaults work fine (no password, `$HOME/.ssh/id_rsa` and `$HOME/.ssh/id_rsa.pub`).
 
 The file `$HOME/.ssh/id_rsa.pub` contains the public key. The entire text as is can be added to places like GitHub to configure SSH based authentication. The private key should be copied to wherever you need to SSH from such as Putty clients etc.
+
 
 
 
