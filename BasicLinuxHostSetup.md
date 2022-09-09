@@ -78,7 +78,32 @@ The defaults work fine (no password, `$HOME/.ssh/id_rsa` and `$HOME/.ssh/id_rsa.
 
 The file `$HOME/.ssh/id_rsa.pub` contains the public key. The entire text as is can be added to places like GitHub to configure SSH based authentication. The private key should be copied to wherever you need to SSH from such as Putty clients etc.
 
+# Configure Docker
 
+Before you can use Docker commands, you have to perform additional configuration.
+
+First, give yourself permissions to access the Docker socket.
+
+`sudo usermod -a -G docker $USER`
+
+Optionally create a new file at `/etc/docker/daemon.json` (or modify if it already exists). The following example shows some simple and useful options:
+
+```
+{
+  "experimental": true,
+  "max-concurrent-downloads": 4,
+  "max-concurrent-uploads": 4,
+  "debug": true,
+  "log-level": "info"
+}
+```
+
+Restart `docker` daemon with `sudo systemctl restart docker`.
+
+Then **logout** and log back in and verify `docker` connectivity is working by running the following commands:
+
+`docker ps -a`
+`docker images`
 
 
 
