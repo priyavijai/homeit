@@ -174,6 +174,27 @@ If Unifi devices are already managed by a different controller, then do the foll
 - In settings, under System, under Advanced, set the IP of the new controller host.
 - Log in to each device via ssh and run `set-inform http://new-ip-or-fqdn-:8080/inform` to set the controller URL.
 
+# Install PiHole
+
+Install PiHole with:
+
+`curl -sSL https://install.pi-hole.net | sudo bash`
+
+Write down the password that is shown for the admin. 
+
+Then change the password by running:
+
+`pihole -a -p`
+
+Choose a new password.
+
+Check that DNS resolution is working well by running:
+
+`nslookup www.google.com <ip-of-dns-server>`
+
+Add various blocking lists and then run `pihole -g` to reconfigure.
+
+
 
 
 
