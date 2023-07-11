@@ -1,6 +1,8 @@
 
 **Everything here is applicable to Ubuntu server LTS systems.**
 
+**NOTE: This setup is only for a host intended to run PiHole and Unifi controller.**
+
 # Password Less SUDO
 
 Passwordless SUDO is very useful. 
