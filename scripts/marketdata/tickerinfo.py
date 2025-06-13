@@ -1,8 +1,5 @@
 
-import pandas as pd
 import re
-import time
-import requests.exceptions
 from finvizfinance.quote import finvizfinance
 
 class TickerInfo:
@@ -54,6 +51,8 @@ class TickerInfo:
                 case "Dividend TTM":
                     self.TTMDividend = value
                     self.extract_dividend(value)
+                case "Payout":
+                    self.PayoutRatio = value
                 case "Price":
                     self.Price = value
                 case "52W Range From":
@@ -95,13 +94,14 @@ class TickerInfo:
         self.Off52WLow = ""
         self.Return5Y = ""
         self.DividendPercentage = 0.0
+        self.PayoutRatio = ""
         self.Return1000 = 0.0
         self.Return2000 = 0.0
         self.Return5000 = 0.0
         self.Return10000 = 0.0
 
         keys = ["Company", "Industry", "Sector", "Exchange", "Category", "Asset Type", "P/E", "Beta", "Dividend TTM",
-                "Price", "52W Range From", "52W Range To", "52W Low", "52W High", "Return% 5Y"]
+                "Price", "52W Range From", "52W Range To", "52W Low", "52W High", "Return% 5Y", "Payout"]
 
         try:
             stock = finvizfinance(ticker)
@@ -111,11 +111,22 @@ class TickerInfo:
             for key in keys:
                 self.extract_fundamental(key)
 
+            self.cleanup_text()
             self.calculate_returns()
+
             self.HasError = False
             print(f"Finished fetching info for ticker {ticker}")
         except:
             print(f"Error fetching info for ticker {ticker}")
+
+    def cleanup_text(self):
+        self.Company = re.sub(r'[^a-zA-Z0-9\s]', '', self.Company).strip()
+        self.Description = re.sub(r'[^a-zA-Z0-9\s]', '', self.Description).strip()
+        self.Industry = re.sub(r'[^a-zA-Z0-9\s]', '', self.Industry).strip()
+        self.Sector = re.sub(r'[^a-zA-Z0-9\s]', '', self.Sector).strip()
+        self.Exchange = re.sub(r'[^a-zA-Z0-9\s]', '', self.Exchange).strip()
+        self.Category = re.sub(r'[^a-zA-Z0-9\s]', '', self.Category).strip()
+        self.AssetType = re.sub(r'[^a-zA-Z0-9\s]', '', self.AssetType).strip()
 
     def print_console(self):
         print(f"--------------------------------------------------------------------------------------------")
@@ -133,6 +144,7 @@ class TickerInfo:
         print(f"Beta: {self.Beta}")
         print(f"TTM Dividend: {self.TTMDividend}")
         print(f"DividendPercentage: {self.DividendPercentage}")
+        print(f"Payout Ratio: {self.PayoutRatio}")
         print(f"Price: {self.Price}")
         print(f"52 Weeek High: {self.High52W}")
         print(f"52 Week Low: {self.Low52W}")
@@ -147,12 +159,12 @@ class TickerInfo:
 
     #    Ticker,Description,Link,Company,Industry,Type,Sector,Exchange,Category,Asset Type,
     #    Start Date,Trend,
-    #    P/E Ratio,Beta,Dividend TTM,Dividend,Price,52W Low,52W High,Above Low By,Below High By, 5Y Return,
+    #    P/E Ratio,Beta,Dividend TTM,Dividend,Payout Ratio,Price,52W Low,52W High,Above Low By,Below High By, 5Y Return,
     #    DividendPercentage,On 1000$,,On 2000$,,On 5000$,On 10000$
 
     def print_file(self, file):
         file.write(f"{self.Ticker},\"{self.Description}\",{self.Link},{self.Company},{self.Industry},{self.Type},{self.Sector},{self.Exchange},{self.Category},{self.AssetType},")
-        file.write(f"=TODAY()-5*365,fill trend formula,")
-        file.write(f"{self.PERatio},{self.Beta},{self.TTMDividend},{self.DividendPercentage},{self.Price},{self.Low52W},{self.High52W},{self.Off52WLow},{self.Off52WHigh},{self.Return5Y},")
+        file.write(f"=TODAY()-5*365,,")
+        file.write(f"{self.PERatio},{self.Beta},{self.TTMDividend},{self.DividendPercentage},{self.PayoutRatio},{self.Price},{self.Low52W},{self.High52W},{self.Off52WLow},{self.Off52WHigh},{self.Return5Y},")
         file.write(f"{self.Return1000},{self.Return2000},{self.Return5000},{self.Return10000}")
         file.write(f"\n")

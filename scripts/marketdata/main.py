@@ -7,8 +7,8 @@ def process_tickers(tickers, filepath, append):
     f = open(filepath, "a" if append else "w")
 
     if not append:
-        #        A      B           C    D       E        F    G      H        I        G          H          I     J         K    L            M        N     O       P        Q            R             S         T        U        V        W
-        f.write("Ticker,Description,Link,Company,Industry,Type,Sector,Exchange,Category,Asset Type,Start Date,Trend,P/E Ratio,Beta,Dividend TTM,Dividend,Price,52W Low,52W High,Above Low By,Below High By,5Y Return,On 1000$,On 2000$,On 5000$,On 10000$\n")
+        #        A      B           C    D       E        F    G      H        I        G          H          I     J         K    L            M        N            O     P       Q        R            S             T         U        V        W        X
+        f.write("Ticker,Description,Link,Company,Industry,Type,Sector,Exchange,Category,Asset Type,Start Date,Trend,P/E Ratio,Beta,Dividend TTM,Dividend,Payout Ratio,Price,52W Low,52W High,Above Low By,Below High By,5Y Return,On 1000$,On 2000$,On 5000$,On 10000$\n")
 
     for ticker in tickers:
         ti = TickerInfo(ticker)
